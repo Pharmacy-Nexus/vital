@@ -1,0 +1,7 @@
+CLEAN VERSION CHANGES
+======================
+1. Removed the visual noise / grain / scanline clutter.
+2. Lowered bloom and exposure so the phone no longer blows out to white.
+3. Kept the emergency profile visible inside the phone.
+4. Switched to a clean white logo without the lower sentence/tagline.
+5. Reduced heavy FX while preserving the main cinematic movement.

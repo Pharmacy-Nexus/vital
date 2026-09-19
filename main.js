@@ -20,7 +20,7 @@ if(!CONTROLS) document.querySelector('.controls').style.display='none';
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x020303);
-scene.fog = new THREE.FogExp2(0x040505, 0.025);
+scene.fog = new THREE.FogExp2(0x040505, 0.015);
 
 const camera = new THREE.PerspectiveCamera(34, innerWidth/innerHeight, .1, 100);
 camera.position.set(0,.05,11.8);
@@ -33,21 +33,21 @@ renderer.setPixelRatio(Math.min(devicePixelRatio,2));
 renderer.setSize(innerWidth,innerHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.15;
+renderer.toneMappingExposure = 0.98;
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 mount.appendChild(renderer.domElement);
 
 const composer = new EffectComposer(renderer);
 composer.addPass(new RenderPass(scene,camera));
-const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth,innerHeight), .72, .58, .70);
+const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth,innerHeight), .18, .45, .92);
 composer.addPass(bloom);
 
 const CinematicShader = {
   uniforms:{
     tDiffuse:{value:null},
     rgbAmount:{value:0},
-    vignette:{value:.26},
+    vignette:{value:.10},
     pulse:{value:0}
   },
   vertexShader:`varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
@@ -197,7 +197,7 @@ function makePhone(screenTex){
   screen.position.z=.178;screen.renderOrder=5;g.add(screen);
 
   const glass=new THREE.Mesh(screenGeo,new THREE.MeshPhysicalMaterial({
-    color:0xffffff,transparent:true,opacity:.055,roughness:.02,clearcoat:1,clearcoatRoughness:.02
+    color:0xffffff,transparent:true,opacity:.02,roughness:.02,clearcoat:1,clearcoatRoughness:.02
   }));
   glass.position.z=.184;glass.renderOrder=6;g.add(glass);
 
@@ -400,8 +400,8 @@ function buildTimeline(){
     tl.to(c.rotation,{z:a+Math.PI/2,y:THREE.MathUtils.degToRad(338-i*3),duration:.72,ease:'expo.out'},3.45+i*.018);
   });
   tl.to(card.scale,{x:.74,y:.74,z:.74,duration:.48,ease:'power2.inOut'},3.55)
-    .to(bloom,{strength:1.05,duration:.20},3.50)
-    .to(bloom,{strength:.74,duration:.40},3.78);
+    .to(bloom,{strength:.26,duration:.20},3.50)
+    .to(bloom,{strength:.18,duration:.40},3.78);
   fan.forEach((c,i)=>{
     tl.to(c.position,{x:L.reveal.x,y:L.reveal.y,z:-.1,duration:.48,ease:'power3.in'},4.10+i*.008)
       .to(c.scale,{x:.03,y:.03,z:.03,duration:.42,ease:'power3.in'},4.10+i*.008)
@@ -430,16 +430,16 @@ function buildTimeline(){
     .to(beam.scale,{x:1.25,duration:.22,ease:'power2.out'},5.40)
     .to(beam.material,{opacity:0,duration:.30},5.62)
     .set(beam,{visible:false},5.95)
-    .to(flash,{opacity:.28,duration:.08,ease:'power1.out'},5.43)
+    .to(flash,{opacity:.08,duration:.08,ease:'power1.out'},5.43)
     .to(flash,{opacity:0,duration:.22,ease:'power2.out'},5.51)
     .to(impactRing,{opacity:.9,scale:2.1,duration:.48,ease:'power2.out'},5.40)
     .to(impactRing,{opacity:0,duration:.22},5.68)
-    .to(cinematicPass.uniforms.rgbAmount,{value:.0042,duration:.08},5.41)
+    .to(cinematicPass.uniforms.rgbAmount,{value:0,duration:.08},5.41)
     .to(cinematicPass.uniforms.rgbAmount,{value:0,duration:.28},5.51)
-    .to(cinematicPass.uniforms.pulse,{value:.75,duration:.08},5.42)
+    .to(cinematicPass.uniforms.pulse,{value:.14,duration:.08},5.42)
     .to(cinematicPass.uniforms.pulse,{value:0,duration:.30},5.50)
-    .to(bloom,{strength:1.48,duration:.10},5.41)
-    .to(bloom,{strength:.76,duration:.42},5.52)
+    .to(bloom,{strength:.30,duration:.10},5.41)
+    .to(bloom,{strength:.18,duration:.42},5.52)
     .to(camera.position,{z:L.cameraZ-.28,duration:.08,ease:'power1.out'},5.42)
     .to(camera.position,{z:L.cameraZ,duration:.26,ease:'elastic.out(1,.6)'},5.50)
     .to(tapCopy,{autoAlpha:0,duration:.24},5.86);
@@ -451,10 +451,7 @@ function buildTimeline(){
     .to(phone.rotation,{x:0,y:0,z:0,duration:.92,ease:'expo.inOut'},5.90)
     .to(phone.position,{x:L.phone.x,y:L.phone.y,z:1.08,duration:.92,ease:'expo.inOut'},5.90)
     .to(phone.scale,{x:L.phone.s*1.12,y:L.phone.s*1.12,z:L.phone.s*1.12,duration:.92},5.90)
-    .to(screenCopy,{autoAlpha:1,duration:.45,ease:'power2.out'},6.68)
-    .to(scanline,{opacity:1,duration:.18},6.78)
-    .fromTo(scanline,{yPercent:-120},{yPercent:920,duration:1.15,ease:'power1.inOut'},6.80)
-    .to(scanline,{opacity:0,duration:.18},7.88);
+    .to(screenCopy,{autoAlpha:1,duration:.45,ease:'power2.out'},6.68);
 
   // screen callouts synced to the real emergency profile
   callouts.forEach((el,i)=>{

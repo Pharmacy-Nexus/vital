@@ -28,16 +28,9 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,
 .fallback-phone img{display:block;width:100%;border-radius:38px}
 
 .fx-overlay{position:absolute;inset:0;z-index:5;pointer-events:none;overflow:hidden}
-.vignette{position:absolute;inset:-5%;box-shadow:inset 0 0 22vmin 8vmin rgba(0,0,0,.75)}
-.grain{
-  position:absolute;inset:0;opacity:.07;mix-blend-mode:soft-light;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.64'/%3E%3C/svg%3E");
-}
-.scanline{
-  position:absolute;left:0;right:0;top:-22%;height:12%;
-  background:linear-gradient(180deg,transparent,rgba(173,255,60,.04),rgba(210,255,140,.20),rgba(173,255,60,.04),transparent);
-  filter:blur(1px);opacity:0;mix-blend-mode:screen
-}
+.vignette{position:absolute;inset:-5%;box-shadow:inset 0 0 16vmin 4vmin rgba(0,0,0,.40)}
+.grain{display:none}
+.scanline{display:none}
 .flash{position:absolute;inset:0;background:#dfff9e;opacity:0;mix-blend-mode:screen}
 .impact-ring{
   position:absolute;left:50%;top:50%;width:10vmin;aspect-ratio:1;border-radius:50%;
@@ -60,10 +53,9 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,
 .copy-screen{left:7vw;bottom:9vh}
 .copy-screen h2{margin:10px 0 0;font-size:clamp(30px,3.2vw,56px);line-height:.95;letter-spacing:-.05em}
 
-.copy-final{left:7vw;top:50%;transform:translateY(-50%);width:min(35vw,560px)}
+.copy-final{left:7vw;top:50%;transform:translateY(-50%);width:min(32vw,500px)}
 .copy-final img{display:block;width:100%}
-.copy-final p{margin:-1.3rem 0 0 8%;font-size:clamp(9px,.78vw,13px);letter-spacing:.43em;color:#c4c8cd}
-.copy-final .lime-rule{width:56px;height:4px;border-radius:999px;background:var(--lime);margin:30px 0 14px 8%}
+.copy-final .lime-rule{width:56px;height:4px;border-radius:999px;background:var(--lime);margin:22px 0 14px 8%}
 .copy-final strong{display:block;margin-left:8%;color:#b0b6bd;font-size:clamp(14px,1.15vw,19px);font-weight:500;letter-spacing:.08em}
 
 .ui-callout{
@@ -95,8 +87,8 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,
   .copy-intro h1{font-size:clamp(46px,13vw,76px)}
   .copy-tap{top:7vh}
   .copy-screen{left:7vw;bottom:7vh}
-  .copy-final{left:50%;top:10vh;transform:translateX(-50%);width:76vw;text-align:center}
-  .copy-final p{margin:-1rem 0 0}.copy-final .lime-rule{margin:22px auto 12px}.copy-final strong{margin:0}
+  .copy-final{left:50%;top:10vh;transform:translateX(-50%);width:70vw;text-align:center}
+  .copy-final .lime-rule{margin:20px auto 12px}.copy-final strong{margin:0}
   .ui-callout{min-width:0;width:42vw;padding:10px 12px}
   .ui-callout.allergy{right:4vw;top:22vh}.ui-callout.blood{right:4vw;top:34vh}.ui-callout.condition{right:4vw;top:46vh}
 }

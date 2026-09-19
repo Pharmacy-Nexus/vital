@@ -53,9 +53,9 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,
 .copy-screen{left:7vw;bottom:9vh}
 .copy-screen h2{margin:10px 0 0;font-size:clamp(30px,3.2vw,56px);line-height:.95;letter-spacing:-.05em}
 
-.copy-final{left:7vw;top:50%;transform:translateY(-50%);width:min(34vw,540px)}
-.copy-final img{display:block;width:100%;margin-bottom:18px}
-.copy-final .lime-rule{width:56px;height:4px;border-radius:999px;background:var(--lime);margin:10px 0 14px 8%}
+.copy-final{left:7vw;top:50%;transform:translateY(-50%);width:min(32vw,500px)}
+.copy-final img{display:block;width:100%}
+.copy-final .lime-rule{width:56px;height:4px;border-radius:999px;background:var(--lime);margin:34px 0 14px 8%}
 .copy-final strong{display:block;margin-left:8%;color:#b0b6bd;font-size:clamp(14px,1.15vw,19px);font-weight:500;letter-spacing:.08em}
 
 .ui-callout{
@@ -87,9 +87,8 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,
   .copy-intro h1{font-size:clamp(46px,13vw,76px)}
   .copy-tap{top:7vh}
   .copy-screen{left:7vw;bottom:7vh}
-  .copy-final{left:50%;top:10vh;transform:translateX(-50%);width:72vw;text-align:center}
-  .copy-final img{margin-bottom:16px}
-  .copy-final .lime-rule{margin:10px auto 12px}.copy-final strong{margin:0}
+  .copy-final{left:50%;top:10vh;transform:translateX(-50%);width:70vw;text-align:center}
+  .copy-final .lime-rule{margin:30px auto 12px}.copy-final strong{margin:0}
   .ui-callout{min-width:0;width:42vw;padding:10px 12px}
   .ui-callout.allergy{right:4vw;top:22vh}.ui-callout.blood{right:4vw;top:34vh}.ui-callout.condition{right:4vw;top:46vh}
 }

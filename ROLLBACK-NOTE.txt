@@ -1,0 +1,12 @@
+ROLLBACK / MINIMAL FIX
+=======================
+This version is based on the ULTRA CLEAN version that the user liked.
+
+Only these things changed:
+- Phone is refined to read more like an iPhone.
+- Phone is fully hidden until it enters from the RIGHT.
+- Card starts farther off-screen and enters from the LEFT.
+- The real supplied Emergency Profile remains inside the phone and is a little clearer/larger on reveal.
+- The ORIGINAL white logo is restored faithfully.
+- Its original small bottom tagline is preserved and only moved slightly lower.
+- No other scene structure, timing, core look, or main choreography was redesigned.

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#050505" />
+  <title>VITAL ID — NFC Product Animation</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="page-shell">
+    <section class="ad-frame" id="adFrame" aria-label="VITAL ID product animation">
+      <div class="stage" id="stage">
+        <div class="bg-grid" aria-hidden="true"></div>
+        <div class="orb orb-a" aria-hidden="true"></div>
+        <div class="orb orb-b" aria-hidden="true"></div>
+        <div class="vignette" aria-hidden="true"></div>
+
+        <header class="intro" id="intro">
+          <img src="./assets/logo-white.png" class="intro-logo" alt="VITAL ID" />
+          <p>A QUICKER WAY TO CARE</p>
+        </header>
+
+        <div class="card-rig" id="cardRig" aria-hidden="true">
+          <div class="card-3d">
+            <img class="card-face card-front" src="./assets/card-front.png" alt="" />
+            <img class="card-face card-back" src="./assets/card-back.png" alt="" />
+          </div>
+          <div class="card-shadow"></div>
+        </div>
+
+        <div class="phone-rig" id="phoneRig" aria-hidden="true">
+          <div class="phone">
+            <div class="phone-edge edge-left"></div>
+            <div class="phone-edge edge-right"></div>
+            <div class="phone-screen">
+              <img src="./assets/emergency-screen.png" alt="" />
+              <div class="screen-sheen"></div>
+            </div>
+            <div class="dynamic-island"></div>
+          </div>
+          <div class="phone-shadow"></div>
+        </div>
+
+        <div class="nfc-zone" id="nfcZone" aria-hidden="true">
+          <span class="nfc-dot"></span>
+          <span class="nfc-ring ring-1"></span>
+          <span class="nfc-ring ring-2"></span>
+          <span class="nfc-ring ring-3"></span>
+          <span class="nfc-ring ring-4"></span>
+          <span class="tap-label">NFC TAP</span>
+        </div>
+
+        <div class="feature-chips" id="featureChips" aria-hidden="true">
+          <div class="chip chip-1"><b>Critical allergy</b><span>Penicillin</span></div>
+          <div class="chip chip-2"><b>Blood type</b><span>O+</span></div>
+          <div class="chip chip-3"><b>Conditions</b><span>Type 1 Diabetes · Asthma</span></div>
+          <div class="chip chip-4"><b>Emergency contact</b><span>Sara Hassan</span></div>
+        </div>
+
+        <section class="final-lockup" id="finalLockup">
+          <img src="./assets/logo-white.png" alt="VITAL ID" />
+          <p class="final-tagline">A QUICKER WAY TO CARE</p>
+          <div class="final-rule"></div>
+          <p class="final-copy">Tap. Access. Help faster.</p>
+        </section>
+
+        <div class="accent-line" aria-hidden="true"></div>
+        <div class="grain" aria-hidden="true"></div>
+
+        <button id="replayBtn" class="replay" type="button" aria-label="Replay animation">↻ Replay</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="./animation.js"></script>
+</body>
+</html>

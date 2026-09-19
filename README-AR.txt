@@ -1,62 +1,52 @@
-VITAL ID — CINEMATIC 3D WEB ANIMATION
-=====================================
+VITAL ID — ULTRA CINEMATIC
+===========================
 
-دي النسخة الجديدة من الصفر: Three.js + GSAP، مش مجرد PNGs بتتحرك بـ CSS.
+دي النسخة القوية الجديدة من الصفر.
 
-الموجود جوه:
-- كارت VITAL ID الأسود كـ 3D object بسمك وحواف وإضاءة.
-- الوجه + الظهر الحقيقيين للكارت.
-- موبايل 3D بخامة معدنية وشاشة Emergency Profile اللي بعتها.
-- NFC pulse فعلي داخل مشهد Three.js.
-- Camera drift / product-lighting / fog / particles.
-- Fan / spiral للكروت مستوحى من الفيديو المرجعي.
-- Final hero composition مناسب للموقع.
-- Responsive: Desktop + Mobile portrait.
-- Static fallback poster لو CDN أو WebGL مش شغال.
+الفرق عن النسخ القديمة:
+- تصميم الكارت الأسود الحقيقي اللي بعته ظاهر كـ texture واضحة، مش مجرد جسم أسود.
+- الكارت له جسم 3D بسمك وحواف وانعكاس Light Sweep.
+- الموبايل له ظهر + Camera bump + NFC target.
+- الكارت يقف BESIDE / IN FRONT OF الموبايل عند الـ NFC؛ لا يدخل داخل جسم الموبايل.
+- NFC impact فيه: 5 rings + energy beam + bloom + flash + RGB split + camera punch.
+- Card clone burst + product wall / orbit sequence زي إعلانات TikTok.
+- Post-processing بـ UnrealBloomPass + cinematic RGB/vignette shader.
+- Emergency Profile الحقيقي يظهر على الشاشة.
+- UI callouts على Penicillin / O+ / Type 1 Diabetes + Asthma.
+- Final Hero shot جاهز للموقع.
+- Responsive للموبايل والـ Desktop.
+- بدون موسيقى.
 
-تشغيل النسخة:
-1) فك الضغط.
-2) على Windows شغّل START-VITAL-ID.bat.
-   أو من Terminal داخل الفولدر:
-       python -m http.server 8080
-3) افتح:
-       http://localhost:8080
+تشغيل محلي:
+1. فك الضغط.
+2. شغّل سيرفر محلي داخل الفولدر:
+   python -m http.server 8080
+3. افتح:
+   http://localhost:8080
 
-مهم:
-Three.js و GSAP بيتحملوا من jsDelivr، لذلك أول تشغيل يحتاج إنترنت.
-بعد رفعه للموقع هيشتغل عادي.
+رفع على Vercel:
+- Framework Preset = Other
+- Build Command = فارغ
+- Output Directory = فارغ
+- Root Directory = الفولدر اللي فيه index.html
+- ارفع الملفات كما هي.
 
-Query parameters:
-?loop=1          يعيد المشهد (default)
-?loop=0          مرة واحدة
-?controls=0      يخفي أزرار replay/pause
-?autoplay=0      لا يبدأ تلقائيًا
-?progress=0.78   يفتح على لقطة معينة من المشهد ويوقفها
+Query options:
+?loop=1        تشغيل Loop (default)
+?loop=0        مرة واحدة
+?controls=0    إخفاء أزرار Replay / Pause
+?autoplay=0    عدم البدء تلقائيًا
 
-أمثلة:
-http://localhost:8080/?loop=1&controls=0
-http://localhost:8080/?progress=0.52
-http://localhost:8080/?progress=0.90
-
-إضافة للموقع:
-الأفضل تحط الملفات في /vital-id-3d/ وبعدين:
-
+للموقع:
 <iframe
-  src="/vital-id-3d/?loop=1&controls=0"
-  style="width:100%;height:min(850px,100svh);border:0;display:block;background:#030404"
-  loading="eager"
+  src="/vital-id-ultra/?loop=1&controls=0"
+  style="width:100%;height:min(900px,100svh);border:0;display:block;background:#030404"
 ></iframe>
 
-أو تدمج section نفسها في الصفحة لو الموقع Vanilla/React/Vite.
+ملاحظة:
+Three.js و GSAP و Postprocessing يتحملوا من jsDelivr عند التشغيل.
+لو الإنترنت غير متاح، الصفحة تعرض Poster fallback بدل شاشة فاضية.
 
-Keyboard:
+التحكم:
 Space = Pause / Play
 R = Replay
-
-الأصول المستخدمة:
-- card-front.png
-- card-back.png
-- emergency-screen.png
-- logo-white.png
-
-مدة المشهد ≈ 13.15 ثانية.

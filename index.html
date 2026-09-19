@@ -3,73 +3,91 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#040505" />
-  <meta name="color-scheme" content="dark" />
-  <title>VITAL ID — Cinematic 3D NFC</title>
+  <meta name="theme-color" content="#030404" />
+  <title>VITAL ID — Ultra Cinematic</title>
   <link rel="stylesheet" href="./styles.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+    }
+  }
+  </script>
 </head>
 <body>
   <main id="app">
-    <!-- Static poster is deliberately underneath the WebGL canvas.
-         It gives you a useful preview if the CDN is offline; JS fades it
-         out once Three.js has rendered the real scene. -->
-    <div class="fallback-poster" aria-hidden="true">
-      <div class="poster-glow poster-glow-a"></div>
-      <div class="poster-glow poster-glow-b"></div>
-      <img class="poster-card" src="./assets/card-front.png" alt="" />
-      <div class="poster-phone">
-        <img src="./assets/emergency-screen.png" alt="" />
-      </div>
-      <div class="poster-brand">
-        <img src="./assets/logo-white.png" alt="" />
-        <span>SMART EMERGENCY ACCESS · NFC + QR</span>
+    <div class="fallback" aria-hidden="true">
+      <div class="fallback-glow"></div>
+      <img class="fallback-card" src="./assets/card-front.png" alt="">
+      <div class="fallback-phone">
+        <img src="./assets/emergency-screen.png" alt="">
       </div>
     </div>
 
     <div id="webgl"></div>
 
-    <div class="hud" aria-hidden="true">
-      <div class="intro-copy">
-        <span class="eyebrow">VITAL ID</span>
-        <h1>Medical information.<br><em>In reach.</em></h1>
-        <p>NFC + QR emergency access.</p>
-      </div>
+    <div class="fx-overlay" aria-hidden="true">
+      <div class="scanline"></div>
+      <div class="grain"></div>
+      <div class="vignette"></div>
+      <div class="flash"></div>
+      <div class="impact-ring"></div>
+    </div>
 
-      <div class="tap-copy">
-        <span class="tap-dot"></span>
-        <span>NFC TAP</span>
-      </div>
+    <div class="copy-layer">
+      <section class="copy copy-intro">
+        <span class="kicker">VITAL ID</span>
+        <h1>One tap.<br><em>Critical info.</em></h1>
+        <p>NFC + QR emergency medical access</p>
+      </section>
 
-      <div class="screen-copy">
-        <span>EMERGENCY PROFILE</span>
-        <strong>Critical information<br>available in seconds.</strong>
-      </div>
+      <section class="copy copy-tap">
+        <span class="pulse-dot"></span>
+        <span>NFC CONNECTION</span>
+      </section>
 
-      <div class="final-copy">
+      <section class="copy copy-screen">
+        <span class="micro">EMERGENCY PROFILE</span>
+        <h2>What matters.<br><em>Right now.</em></h2>
+      </section>
+
+      <section class="copy copy-final">
         <img src="./assets/logo-white.png" alt="VITAL ID" />
         <p>A QUICKER WAY TO CARE</p>
-        <i></i>
+        <div class="lime-rule"></div>
         <strong>Tap. Access. Help faster.</strong>
+      </section>
+
+      <div class="ui-callout allergy">
+        <span>CRITICAL ALLERGY</span>
+        <b>Penicillin</b>
+      </div>
+      <div class="ui-callout blood">
+        <span>BLOOD TYPE</span>
+        <b>O+</b>
+      </div>
+      <div class="ui-callout condition">
+        <span>MAJOR CONDITIONS</span>
+        <b>Type 1 Diabetes · Asthma</b>
       </div>
     </div>
 
-    <div class="ui">
-      <button id="replay" type="button" title="Replay">↻</button>
-      <button id="pause" type="button" title="Pause / play">Ⅱ</button>
+    <div class="controls">
+      <button id="replay" aria-label="Replay">↻</button>
+      <button id="pause" aria-label="Pause">Ⅱ</button>
     </div>
 
-    <div id="loading" class="loading">
-      <span></span>
-      <small>LOADING VITAL ID</small>
+    <div id="loader" class="loader">
+      <div class="loader-line"></div>
+      <span>VITAL ID / CINEMATIC SYSTEM</span>
     </div>
   </main>
 
-  <script>
-    // Fail-safe: if the CDN is unavailable, reveal the static poster instead
-    // of leaving a loading screen over the page.
-    window.setTimeout(() => document.getElementById("loading")?.classList.add("hide"), 2600);
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script type="module" src="./main.js"></script>
+  <script>
+    setTimeout(() => document.querySelector('#loader')?.classList.add('hide'), 3500);
+  </script>
 </body>
 </html>

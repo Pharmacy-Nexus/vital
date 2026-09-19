@@ -2,77 +2,74 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#050505" />
-  <title>VITAL ID — NFC Product Animation</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#040505" />
+  <meta name="color-scheme" content="dark" />
+  <title>VITAL ID — Cinematic 3D NFC</title>
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
-  <main class="page-shell">
-    <section class="ad-frame" id="adFrame" aria-label="VITAL ID product animation">
-      <div class="stage" id="stage">
-        <div class="bg-grid" aria-hidden="true"></div>
-        <div class="orb orb-a" aria-hidden="true"></div>
-        <div class="orb orb-b" aria-hidden="true"></div>
-        <div class="vignette" aria-hidden="true"></div>
-
-        <header class="intro" id="intro">
-          <img src="./assets/logo-white.png" class="intro-logo" alt="VITAL ID" />
-          <p>A QUICKER WAY TO CARE</p>
-        </header>
-
-        <div class="card-rig" id="cardRig" aria-hidden="true">
-          <div class="card-3d">
-            <img class="card-face card-front" src="./assets/card-front.png" alt="" />
-            <img class="card-face card-back" src="./assets/card-back.png" alt="" />
-          </div>
-          <div class="card-shadow"></div>
-        </div>
-
-        <div class="phone-rig" id="phoneRig" aria-hidden="true">
-          <div class="phone">
-            <div class="phone-edge edge-left"></div>
-            <div class="phone-edge edge-right"></div>
-            <div class="phone-screen">
-              <img src="./assets/emergency-screen.png" alt="" />
-              <div class="screen-sheen"></div>
-            </div>
-            <div class="dynamic-island"></div>
-          </div>
-          <div class="phone-shadow"></div>
-        </div>
-
-        <div class="nfc-zone" id="nfcZone" aria-hidden="true">
-          <span class="nfc-dot"></span>
-          <span class="nfc-ring ring-1"></span>
-          <span class="nfc-ring ring-2"></span>
-          <span class="nfc-ring ring-3"></span>
-          <span class="nfc-ring ring-4"></span>
-          <span class="tap-label">NFC TAP</span>
-        </div>
-
-        <div class="feature-chips" id="featureChips" aria-hidden="true">
-          <div class="chip chip-1"><b>Critical allergy</b><span>Penicillin</span></div>
-          <div class="chip chip-2"><b>Blood type</b><span>O+</span></div>
-          <div class="chip chip-3"><b>Conditions</b><span>Type 1 Diabetes · Asthma</span></div>
-          <div class="chip chip-4"><b>Emergency contact</b><span>Sara Hassan</span></div>
-        </div>
-
-        <section class="final-lockup" id="finalLockup">
-          <img src="./assets/logo-white.png" alt="VITAL ID" />
-          <p class="final-tagline">A QUICKER WAY TO CARE</p>
-          <div class="final-rule"></div>
-          <p class="final-copy">Tap. Access. Help faster.</p>
-        </section>
-
-        <div class="accent-line" aria-hidden="true"></div>
-        <div class="grain" aria-hidden="true"></div>
-
-        <button id="replayBtn" class="replay" type="button" aria-label="Replay animation">↻ Replay</button>
+  <main id="app">
+    <!-- Static poster is deliberately underneath the WebGL canvas.
+         It gives you a useful preview if the CDN is offline; JS fades it
+         out once Three.js has rendered the real scene. -->
+    <div class="fallback-poster" aria-hidden="true">
+      <div class="poster-glow poster-glow-a"></div>
+      <div class="poster-glow poster-glow-b"></div>
+      <img class="poster-card" src="./assets/card-front.png" alt="" />
+      <div class="poster-phone">
+        <img src="./assets/emergency-screen.png" alt="" />
       </div>
-    </section>
+      <div class="poster-brand">
+        <img src="./assets/logo-white.png" alt="" />
+        <span>SMART EMERGENCY ACCESS · NFC + QR</span>
+      </div>
+    </div>
+
+    <div id="webgl"></div>
+
+    <div class="hud" aria-hidden="true">
+      <div class="intro-copy">
+        <span class="eyebrow">VITAL ID</span>
+        <h1>Medical information.<br><em>In reach.</em></h1>
+        <p>NFC + QR emergency access.</p>
+      </div>
+
+      <div class="tap-copy">
+        <span class="tap-dot"></span>
+        <span>NFC TAP</span>
+      </div>
+
+      <div class="screen-copy">
+        <span>EMERGENCY PROFILE</span>
+        <strong>Critical information<br>available in seconds.</strong>
+      </div>
+
+      <div class="final-copy">
+        <img src="./assets/logo-white.png" alt="VITAL ID" />
+        <p>A QUICKER WAY TO CARE</p>
+        <i></i>
+        <strong>Tap. Access. Help faster.</strong>
+      </div>
+    </div>
+
+    <div class="ui">
+      <button id="replay" type="button" title="Replay">↻</button>
+      <button id="pause" type="button" title="Pause / play">Ⅱ</button>
+    </div>
+
+    <div id="loading" class="loading">
+      <span></span>
+      <small>LOADING VITAL ID</small>
+    </div>
   </main>
 
-  <script src="./animation.js"></script>
+  <script>
+    // Fail-safe: if the CDN is unavailable, reveal the static poster instead
+    // of leaving a loading screen over the page.
+    window.setTimeout(() => document.getElementById("loading")?.classList.add("hide"), 2600);
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+  <script type="module" src="./main.js"></script>
 </body>
 </html>

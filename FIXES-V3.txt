@@ -1,0 +1,7 @@
+V3 fixes
+========
+1. Card artwork planes moved outside the 3D body, so the exact black VITAL ID designs are now visible.
+2. Emergency Profile screen moved outside the phone chassis, so it is no longer hidden by the black phone body.
+3. Added a visible phone-back camera module + NFC target.
+4. Card no longer travels through the phone. It approaches the NFC area, hovers in front of it, pulses, then moves away before the phone flips.
+5. Card front/back textures use polygon offset to avoid depth-fighting.

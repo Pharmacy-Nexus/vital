@@ -84,7 +84,10 @@ function makeSprite(texture,scale=1,opacity=.4){
 }
 function makeTexturedFace(tex,w,h,z,rotY=0){
   const geo=roundedPlane(w,h,.16,40);
-  const mat=new THREE.MeshBasicMaterial({map:tex,transparent:true,alphaTest:.02,side:THREE.DoubleSide,toneMapped:false});
+  const mat=new THREE.MeshBasicMaterial({
+    map:tex,transparent:true,alphaTest:.02,side:THREE.DoubleSide,toneMapped:false,
+    depthTest:true,depthWrite:true,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2
+  });
   const mesh=new THREE.Mesh(geo,mat);
   mesh.position.z=z; mesh.rotation.y=rotY;
   return mesh;
@@ -94,14 +97,18 @@ function makeCard(frontTex,backTex,glowTex){
   const body=new THREE.Mesh(
     roundedExtrude(4.35,2.57,.19,.105,.035),
     new THREE.MeshPhysicalMaterial({
-      color:0x101110,metalness:.72,roughness:.22,
+      color:0x181a19,metalness:.72,roughness:.20,
       clearcoat:1,clearcoatRoughness:.15
     })
   );
   body.castShadow=true; body.receiveShadow=true;
   g.add(body);
-  const front=makeTexturedFace(frontTex,4.31,2.54,.075,0);
-  const back=makeTexturedFace(backTex,4.31,2.54,-.075,Math.PI);
+  // IMPORTANT: the extruded body including bevel reaches ~±0.09 on Z.
+  // Keep the artwork slightly OUTSIDE it; otherwise the black body hides the design.
+  const front=makeTexturedFace(frontTex,4.31,2.54,.108,0);
+  const back=makeTexturedFace(backTex,4.31,2.54,-.108,Math.PI);
+  front.renderOrder=3;
+  back.renderOrder=3;
   g.add(front,back);
 
   const edge=new THREE.LineSegments(
@@ -132,7 +139,9 @@ function makePhone(screenTex,glowTex){
   const screenGeo=roundedPlane(2.25,4.86,.245,48);
   const screenMat=new THREE.MeshBasicMaterial({map:screenTex,toneMapped:false});
   const screen=new THREE.Mesh(screenGeo,screenMat);
-  screen.position.z=.145;
+  // The phone body + bevel reaches ~±0.165. Put the display in front of it.
+  screen.position.z=.178;
+  screen.renderOrder=4;
   g.add(screen);
 
   const glass=new THREE.Mesh(screenGeo,new THREE.MeshPhysicalMaterial({
@@ -140,7 +149,8 @@ function makePhone(screenTex,glowTex){
     transmission:.1,roughness:.05,metalness:0,
     clearcoat:1,clearcoatRoughness:.05
   }));
-  glass.position.z=.151;
+  glass.position.z=.184;
+  glass.renderOrder=5;
   g.add(glass);
 
   const island=new THREE.Mesh(
@@ -149,8 +159,53 @@ function makePhone(screenTex,glowTex){
   );
   island.rotation.z=Math.PI/2;
   island.scale.set(1,1,.15);
-  island.position.set(0,2.15,.17);
+  island.position.set(0,2.15,.205);
   g.add(island);
+
+  // Back plate details — visible during the NFC tap scene.
+  const backPlate=new THREE.Mesh(
+    roundedPlane(2.25,4.86,.245,48),
+    new THREE.MeshPhysicalMaterial({
+      color:0x111412,metalness:.62,roughness:.36,
+      clearcoat:.72,clearcoatRoughness:.2,side:THREE.DoubleSide
+    })
+  );
+  backPlate.position.z=-.178;
+  backPlate.rotation.y=Math.PI;
+  backPlate.renderOrder=2;
+  g.add(backPlate);
+
+  const camBump=new THREE.Mesh(
+    roundedExtrude(.76,.76,.16,.075,.02),
+    new THREE.MeshPhysicalMaterial({color:0x171918,metalness:.76,roughness:.22,clearcoat:1})
+  );
+  camBump.position.set(-.66,1.64,-.225);
+  camBump.rotation.y=Math.PI;
+  g.add(camBump);
+
+  const lensMat=new THREE.MeshPhysicalMaterial({
+    color:0x020303,metalness:.55,roughness:.08,clearcoat:1,clearcoatRoughness:.03
+  });
+  [[-.84,1.82],[-.50,1.82],[-.67,1.49]].forEach(([x,y])=>{
+    const lens=new THREE.Mesh(new THREE.CylinderGeometry(.105,.105,.045,36),lensMat);
+    lens.rotation.x=Math.PI/2;
+    lens.position.set(x,y,-.275);
+    g.add(lens);
+  });
+
+  // Small NFC target on the back.
+  const nfcMark=new THREE.Group();
+  for(let i=0;i<3;i++){
+    const arc=new THREE.Mesh(
+      new THREE.TorusGeometry(.13+i*.105,.018,8,40,Math.PI*1.08),
+      new THREE.MeshBasicMaterial({color:0x9be51b,toneMapped:false})
+    );
+    arc.rotation.z=-Math.PI*.54;
+    nfcMark.add(arc);
+  }
+  nfcMark.position.set(.50,.88,-.205);
+  nfcMark.rotation.y=Math.PI;
+  g.add(nfcMark);
 
   const buttonMat=new THREE.MeshStandardMaterial({color:0x2a2c2a,metalness:.85,roughness:.2});
   const b1=new THREE.Mesh(new THREE.BoxGeometry(.055,.58,.10),buttonMat);
@@ -290,7 +345,11 @@ function buildTimeline(){
     p.visible=false;
     p.material.opacity=0;
     p.scale.setScalar(.2);
-    p.position.set(L.phoneHero.x, L.phoneHero.y+.75, 1.55);
+    p.position.set(
+      L.phoneHero.x+(innerWidth/innerHeight<.82 ? .56:.72),
+      L.phoneHero.y+.82,
+      1.28
+    );
   });
   fanCards.forEach(c=>{c.visible=false;c.scale.setScalar(.15)});
 
@@ -325,12 +384,15 @@ function buildTimeline(){
     .to(phone.position,{x:L.phoneHero.x,y:L.phoneHero.y,z:L.phoneHero.z,duration:1.15,ease:"expo.out"},3.65)
     .to(phone.rotation,{x:deg(4),y:deg(173),z:deg(2),duration:1.15,ease:"expo.out"},3.65)
     .to(phone.scale,{x:L.phoneHero.scale,y:L.phoneHero.scale,z:L.phoneHero.scale,duration:1.15,ease:"expo.out"},3.65)
+    // Approach the upper-right NFC area WITHOUT intersecting the phone.
     .to(mainCard.position,{
-      x:L.phoneHero.x+(innerWidth/innerHeight<.82 ? .1:-.15),
-      y:L.phoneHero.y+.35,z:1.25,duration:.95,ease:"power3.inOut"
+      x:L.phoneHero.x+(innerWidth/innerHeight<.82 ? 1.18:1.62),
+      y:L.phoneHero.y+.58,
+      z:1.02,
+      duration:.95,ease:"power3.inOut"
     },4.45)
-    .to(mainCard.rotation,{x:deg(1),y:deg(172),z:deg(-5),duration:.95},4.45)
-    .to(mainCard.scale,{x:.49,y:.49,z:.49,duration:.95},4.45)
+    .to(mainCard.rotation,{x:deg(3),y:deg(166),z:deg(-8),duration:.95},4.45)
+    .to(mainCard.scale,{x:.43,y:.43,z:.43,duration:.95},4.45)
     .to(tapEl,{autoAlpha:1,duration:.25,ease:"power1.out"},4.92);
 
   // 5.05–5.95: NFC pulse
@@ -347,7 +409,12 @@ function buildTimeline(){
 
   // 5.65–8.25: phone flips to front and becomes the hero.
   timeline
-    .to(mainCard.position,{x:L.phoneHero.x+(innerWidth/innerHeight<.82 ? 2.4:3.0),y:-2.1,z:-1.0,duration:1.0,ease:"power3.inOut"},5.58)
+    .to(mainCard.position,{
+      x:L.phoneHero.x+(innerWidth/innerHeight<.82 ? 2.35:3.25),
+      y:L.phoneHero.y-1.75,
+      z:.05,
+      duration:1.0,ease:"power3.inOut"
+    },5.58)
     .to(mainCard.rotation,{x:deg(8),y:deg(340),z:deg(10),duration:1.0},5.58)
     .to(mainCard.scale,{x:.35,y:.35,z:.35,duration:1.0},5.58)
     .to(phone.rotation,{x:deg(1),y:deg(0),z:deg(0),duration:1.05,ease:"expo.inOut"},5.62)

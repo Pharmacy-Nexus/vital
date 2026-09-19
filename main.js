@@ -183,7 +183,7 @@ function makeCard(frontTex,backTex){
 function makePhone(screenTex){
   const g=new THREE.Group();
   const body=new THREE.Mesh(
-    roundedExtrude(2.50,5.18,.30,.24),
+    roundedExtrude(2.48,5.22,.28,.24),
     new THREE.MeshPhysicalMaterial({
       color:0x101211,metalness:.94,roughness:.15,clearcoat:1,clearcoatRoughness:.08
     })
@@ -241,8 +241,14 @@ function makePhone(screenTex){
   const b2=b1.clone();b2.scale.y=.52;b2.position.y=1.27;g.add(b2);
   const b3=b1.clone();b3.scale.y=.78;b3.position.set(1.29,.78,.03);g.add(b3);
 
+  const frame=new THREE.LineSegments(
+    new THREE.EdgesGeometry(body.geometry,24),
+    new THREE.LineBasicMaterial({color:0xffffff,transparent:true,opacity:.10})
+  );
+  g.add(frame);
+
   const glow=spriteGlow(5.1,.09,0xaaff33);glow.position.z=-.38;glow.scale.x=.70;g.add(glow);
-  g.userData={body,screen,glass,backPanel,nfc,glow};
+  g.userData={body,screen,glass,backPanel,nfc,glow,frame};
   return g;
 }
 
@@ -317,18 +323,18 @@ function layout(){
   const portrait=innerWidth/innerHeight<.82;
   return portrait?{
     cameraZ:13.7,
-    reveal:{x:0,y:-.55,z:.35,s:.82},
-    phone:{x:0,y:-.38,z:.25,s:.83},
-    tapCard:{x:1.10,y:.25,z:1.18,s:.40},
-    finalPhone:{x:0,y:-1.25,z:-.2,s:.66},
-    finalCard:{x:0,y:1.65,z:.62,s:.50}
+    reveal:{x:-.42,y:-.55,z:.35,s:.82},
+    phone:{x:1.24,y:-.32,z:.22,s:.84},
+    tapCard:{x:.18,y:.18,z:1.18,s:.40},
+    finalPhone:{x:.32,y:-1.18,z:-.2,s:.67},
+    finalCard:{x:-.28,y:1.55,z:.62,s:.50}
   }:{
     cameraZ:11.8,
-    reveal:{x:1.25,y:.05,z:.45,s:1.02},
-    phone:{x:1.85,y:.03,z:.25,s:.98},
-    tapCard:{x:3.20,y:.70,z:1.18,s:.44},
-    finalPhone:{x:2.40,y:.0,z:-.12,s:.80},
-    finalCard:{x:2.65,y:-1.55,z:.62,s:.68}
+    reveal:{x:-2.10,y:.08,z:.45,s:1.02},
+    phone:{x:3.35,y:.03,z:.22,s:.98},
+    tapCard:{x:1.72,y:.60,z:1.18,s:.44},
+    finalPhone:{x:2.65,y:.0,z:-.12,s:.81},
+    finalCard:{x:1.10,y:-1.45,z:.62,s:.68}
   };
 }
 function setCardSweep(alpha=0,x=-1.2){
@@ -360,10 +366,10 @@ function buildTimeline(){
   beam.visible=false;beam.material.opacity=0;
 
   card.visible=true;phone.visible=true;
-  gsap.set(card.position,{x:-6.8,y:-1.8,z:-3.4});
+  gsap.set(card.position,{x:(innerWidth/innerHeight<.82?-7.8:-10.2),y:-1.7,z:-3.6});
   gsap.set(card.rotation,{x:THREE.MathUtils.degToRad(38),y:THREE.MathUtils.degToRad(-135),z:THREE.MathUtils.degToRad(-28)});
   gsap.set(card.scale,{x:.35,y:.35,z:.35});
-  gsap.set(phone.position,{x:8.0,y:.8,z:-4.2});
+  gsap.set(phone.position,{x:(innerWidth/innerHeight<.82?8.0:12.5),y:.7,z:-4.4});
   gsap.set(phone.rotation,{x:THREE.MathUtils.degToRad(9),y:THREE.MathUtils.degToRad(168),z:THREE.MathUtils.degToRad(11)});
   gsap.set(phone.scale,{x:.52,y:.52,z:.52});
 
@@ -408,14 +414,15 @@ function buildTimeline(){
       .set(c,{visible:false},4.54+i*.008);
   });
 
-  // 4.35 — phone arrives BACK-FIRST; the card stops BESIDE the phone, never intersects it
-  tl.to(phone.position,{x:L.phone.x,y:L.phone.y,z:L.phone.z,duration:1.00,ease:'expo.out'},4.36)
-    .to(phone.rotation,{x:THREE.MathUtils.degToRad(3),y:THREE.MathUtils.degToRad(174),z:THREE.MathUtils.degToRad(2),duration:1.00,ease:'expo.out'},4.36)
-    .to(phone.scale,{x:L.phone.s,y:L.phone.s,z:L.phone.s,duration:1.0,ease:'expo.out'},4.36)
-    .to(card.position,{x:L.tapCard.x,y:L.tapCard.y,z:L.tapCard.z,duration:.84,ease:'power3.inOut'},4.88)
-    .to(card.rotation,{x:THREE.MathUtils.degToRad(3),y:THREE.MathUtils.degToRad(166),z:THREE.MathUtils.degToRad(-7),duration:.84},4.88)
-    .to(card.scale,{x:L.tapCard.s,y:L.tapCard.s,z:L.tapCard.s,duration:.84},4.88)
-    .to(tapCopy,{autoAlpha:1,duration:.22,ease:'power1.out'},5.26);
+  // 4.35 — phone arrives from the RIGHT like an iPhone product shot;
+  //          card arrives from the LEFT and stops beside the phone.
+  tl.to(phone.position,{x:L.phone.x,y:L.phone.y,z:L.phone.z,duration:1.10,ease:'expo.out'},4.38)
+    .to(phone.rotation,{x:THREE.MathUtils.degToRad(2),y:THREE.MathUtils.degToRad(176),z:THREE.MathUtils.degToRad(1),duration:1.10,ease:'expo.out'},4.38)
+    .to(phone.scale,{x:L.phone.s,y:L.phone.s,z:L.phone.s,duration:1.10,ease:'expo.out'},4.38)
+    .to(card.position,{x:L.tapCard.x,y:L.tapCard.y,z:L.tapCard.z,duration:.88,ease:'power3.inOut'},4.82)
+    .to(card.rotation,{x:THREE.MathUtils.degToRad(3),y:THREE.MathUtils.degToRad(166),z:THREE.MathUtils.degToRad(-7),duration:.88},4.82)
+    .to(card.scale,{x:L.tapCard.s,y:L.tapCard.s,z:L.tapCard.s,duration:.88},4.82)
+    .to(tapCopy,{autoAlpha:1,duration:.22,ease:'power1.out'},5.24);
 
   // 5.40 — NFC "impact": rings, beam, flash, bloom, RGB split, tiny camera punch
   const tapX = innerWidth/innerHeight<.82 ? .56 : .74;
@@ -450,7 +457,7 @@ function buildTimeline(){
     .to(card.scale,{x:.31,y:.31,z:.31,duration:.88},5.86)
     .to(phone.rotation,{x:0,y:0,z:0,duration:.92,ease:'expo.inOut'},5.90)
     .to(phone.position,{x:L.phone.x,y:L.phone.y,z:1.08,duration:.92,ease:'expo.inOut'},5.90)
-    .to(phone.scale,{x:L.phone.s*1.12,y:L.phone.s*1.12,z:L.phone.s*1.12,duration:.92},5.90)
+    .to(phone.scale,{x:L.phone.s*1.14,y:L.phone.s*1.14,z:L.phone.s*1.14,duration:.92},5.90)
     .to(screenCopy,{autoAlpha:1,duration:.45,ease:'power2.out'},6.68);
 
   // screen callouts synced to the real emergency profile

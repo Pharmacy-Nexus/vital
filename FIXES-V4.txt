@@ -1,0 +1,11 @@
+V4 REFINEMENTS
+================
+1. Phone now reads more like an iPhone product shot:
+   - slightly refined body proportions
+   - visible premium outline / frame
+   - same camera bump + dynamic island language
+2. Phone now starts farther off-screen on the right.
+3. Card starts farther off-screen on the left.
+4. Choreography adjusted so the phone clearly enters from the right and the card from the left.
+5. Emergency screen remains meaningful and clearer when the phone flips to the front.
+6. White logo restored with its lower sentence, but the lower sentence has been pushed farther down to avoid overlap.

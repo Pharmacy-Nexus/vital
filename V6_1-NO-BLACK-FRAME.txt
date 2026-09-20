@@ -1,0 +1,15 @@
+V6.1 — PHONE FRAME CLEANUP
+============================
+Only one issue was adjusted:
+
+- The extra dark/black frame visible around the iPhone mockup was reduced heavily.
+- The supporting 3D chassis behind the PNG mockups is now much smaller and almost invisible.
+- The bright outline frame was also reduced to near-zero.
+- The supplied iPhone mockup images remain the main visible phone shape.
+
+No changes were made to:
+- the card
+- the logo
+- the animation structure
+- the emergency screen content
+- the overall scene concept

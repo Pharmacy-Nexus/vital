@@ -1,0 +1,20 @@
+V6.2 — WHITE BACKGROUND VERSION
+=================================
+Main change:
+- The scene background was switched from black/dark to a clean white / off-white look.
+
+Adjusted along with it:
+- page/app background
+- scene fog and floor tone
+- background accent sheets (kept subtle)
+- overlay vignette
+- copy text colors
+- final logo swapped to black for visibility
+- glass callouts turned light instead of dark
+- controls and loader updated for the light theme
+
+What stayed the same:
+- iPhone mockup approach
+- card design
+- animation structure
+- brand concept and core scene

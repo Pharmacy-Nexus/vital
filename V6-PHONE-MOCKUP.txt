@@ -1,0 +1,12 @@
+V6 — PHONE MOCKUP REPLACEMENT
+===============================
+This version keeps the existing VITAL ID animation and card work.
+
+Only the phone was changed:
+- Uses the exact iPhone mockup references supplied by the user.
+- Idle NFC shot uses the supplied green-screen iPhone front.
+- After the NFC hit, it cross-fades into the supplied Emergency Profile iPhone.
+- Final hero uses the supplied 3/4 Emergency Profile iPhone.
+- A very thin 3D chassis remains behind the images only to preserve depth in the animation.
+
+No card artwork, logo, copy, scene concept, or main animation structure was redesigned.

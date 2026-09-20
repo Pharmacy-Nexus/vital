@@ -198,123 +198,60 @@ function makeCard(frontTex,backTex){
   return g;
 }
 
-function makePhone(screenTex){
+function makePhone(screenTex,idleTex,emergencyTex,angleTex){
   const g=new THREE.Group();
-  const body=new THREE.Mesh(
-    roundedExtrude(2.48,5.22,.31,.28),
+
+  // Thin 3D chassis sits behind the real supplied iPhone mockups.
+  // It only provides believable thickness during small perspective moves.
+  const chassis=new THREE.Mesh(
+    roundedExtrude(2.43,5.10,.30,.19),
     new THREE.MeshPhysicalMaterial({
-      color:0x1b1d1d,metalness:.98,roughness:.11,clearcoat:1,clearcoatRoughness:.05,ior:1.55
+      color:0x181a1a,metalness:.97,roughness:.12,clearcoat:1,clearcoatRoughness:.05
     })
   );
-  body.castShadow=true;g.add(body);
-
-  // front display
-  const screenGeo=roundedPlane(2.22,4.90,.27);
-  const screenMat=new THREE.MeshBasicMaterial({map:screenTex,toneMapped:false,color:0xffffff});
-  const screen=new THREE.Mesh(screenGeo,screenMat);
-  screen.position.z=.178;screen.renderOrder=5;g.add(screen);
-
-  // front glass
-  const glass=new THREE.Mesh(screenGeo,new THREE.MeshPhysicalMaterial({
-    color:0xffffff,transparent:true,opacity:.032,roughness:.015,clearcoat:1,clearcoatRoughness:.01
-  }));
-  glass.position.z=.188;g.add(glass);
-
-  // subtle screen reflection
-  const reflection=new THREE.Mesh(
-    roundedPlane(1.92,4.20,.22),
-    new THREE.MeshPhysicalMaterial({
-      color:0xcfe4ff,transparent:true,opacity:.06,roughness:.02,clearcoat:1,clearcoatRoughness:.02
-    })
-  );
-  reflection.rotation.z=-.34;
-  reflection.position.set(.12,.10,.189);
-  g.add(reflection);
-
-  // dynamic island + tiny camera dot
-  const island=new THREE.Mesh(
-    new THREE.CapsuleGeometry(.235, .42, 8, 18),
-    new THREE.MeshBasicMaterial({color:0x050607})
-  );
-  island.rotation.z=Math.PI/2;island.position.set(0,2.00,.182);g.add(island);
-
-  const camDot=new THREE.Mesh(
-    new THREE.CircleGeometry(.028,24),
-    new THREE.MeshBasicMaterial({color:0x18253a,toneMapped:false})
-  );
-  camDot.position.set(.31,2.00,.183);g.add(camDot);
-
-  // back glass panel
-  const backPanel=new THREE.Mesh(
-    roundedPlane(2.26,4.96,.27),
-    new THREE.MeshPhysicalMaterial({color:0x111412,metalness:.70,roughness:.28,clearcoat:.9,side:THREE.DoubleSide})
-  );
-  backPanel.position.z=-.178;backPanel.rotation.y=Math.PI;g.add(backPanel);
-
-  // MagSafe / NFC hint
-  const nfc=new THREE.Mesh(
-    new THREE.TorusGeometry(.62,.018,10,80),
-    new THREE.MeshBasicMaterial({color:0x95ef24,transparent:true,opacity:.0,toneMapped:false})
-  );
-  nfc.position.z=-.182;nfc.rotation.y=Math.PI;g.add(nfc);
-
-  // camera bump
-  const bump=new THREE.Mesh(
-    roundedExtrude(.96,.96,.19,.09),
-    new THREE.MeshPhysicalMaterial({color:0x252826,metalness:.88,roughness:.15,clearcoat:1})
-  );
-  bump.position.set(-.65,1.64,-.228);bump.rotation.y=Math.PI;g.add(bump);
-
-  const lensMat=new THREE.MeshPhysicalMaterial({
-    color:0x010202,metalness:.65,roughness:.03,clearcoat:1,clearcoatRoughness:.01
-  });
-  [[-.86,1.86],[-.49,1.86],[-.68,1.49]].forEach(([x,y])=>{
-    const l=new THREE.Mesh(new THREE.CylinderGeometry(.122,.122,.056,44),lensMat);
-    l.rotation.x=Math.PI/2;l.position.set(x,y,-.285);g.add(l);
-
-    const ring=new THREE.Mesh(
-      new THREE.TorusGeometry(.132,.015,10,42),
-      new THREE.MeshBasicMaterial({color:0x848a84})
-    );
-    ring.position.set(x,y,-.312);ring.rotation.x=Math.PI/2;g.add(ring);
-
-    const gloss=new THREE.Mesh(
-      new THREE.CircleGeometry(.082,28),
-      new THREE.MeshBasicMaterial({color:0x182029,transparent:true,opacity:.28,toneMapped:false})
-    );
-    gloss.position.set(x,y,-.314);gloss.rotation.y=Math.PI;g.add(gloss);
-  });
-
-  const flashDot=new THREE.Mesh(
-    new THREE.CircleGeometry(.058,28),
-    new THREE.MeshBasicMaterial({color:0xf5f0da,toneMapped:false})
-  );
-  flashDot.position.set(-.43,1.49,-.313);flashDot.rotation.y=Math.PI;g.add(flashDot);
-
-  const lidar=new THREE.Mesh(
-    new THREE.CircleGeometry(.040,28),
-    new THREE.MeshBasicMaterial({color:0x1b1d1d,toneMapped:false})
-  );
-  lidar.position.set(-.42,1.63,-.314);lidar.rotation.y=Math.PI;g.add(lidar);
-
-  // side buttons
-  const bm=new THREE.MeshStandardMaterial({color:0x626864,metalness:.95,roughness:.22});
-  const actionBtn=new THREE.Mesh(new THREE.BoxGeometry(.05,.30,.10),bm);
-  actionBtn.position.set(-1.28,1.55,.03);g.add(actionBtn);
-  const vol1=new THREE.Mesh(new THREE.BoxGeometry(.05,.54,.10),bm);vol1.position.set(-1.28,.84,.03);g.add(vol1);
-  const vol2=vol1.clone();vol2.scale.y=.85;vol2.position.y=.18;g.add(vol2);
-  const power=new THREE.Mesh(new THREE.BoxGeometry(.05,.82,.10),bm);power.position.set(1.28,.78,.03);g.add(power);
+  chassis.position.z=-.08;chassis.castShadow=true;g.add(chassis);
 
   const frame=new THREE.LineSegments(
-    new THREE.EdgesGeometry(body.geometry,26),
-    new THREE.LineBasicMaterial({color:0xe0e4e1,transparent:true,opacity:.18})
+    new THREE.EdgesGeometry(chassis.geometry,26),
+    new THREE.LineBasicMaterial({color:0xd6dad7,transparent:true,opacity:.12})
   );
-  g.add(frame);
+  frame.position.z=-.08;g.add(frame);
 
-  const glow=spriteGlow(5.1,.08,0xaaff33);
-  glow.position.z=-.38;glow.scale.x=.70;g.add(glow);
+  function mockupPlane(tex,w,h,z){
+    const mat=new THREE.MeshBasicMaterial({
+      map:tex,transparent:true,depthWrite:false,toneMapped:false,side:THREE.DoubleSide
+    });
+    mat.opacity=1;
+    const mesh=new THREE.Mesh(new THREE.PlaneGeometry(w,h),mat);
+    mesh.position.z=z;
+    mesh.renderOrder=12;
+    return mesh;
+  }
 
-  g.userData={body,screen,glass,reflection,backPanel,nfc,glow,frame};
+  // Exact user-supplied iPhone references.
+  const idle=mockupPlane(idleTex,2.72,4.90,.10);
+  const emergency=mockupPlane(emergencyTex,2.72,4.92,.105);
+  const angle=mockupPlane(angleTex,2.32,5.10,.11);
+
+  emergency.material.opacity=0;
+  angle.material.opacity=0;
+  emergency.visible=true;
+  angle.visible=true;
+
+  g.add(idle,emergency,angle);
+
+  // Soft premium halo, kept subtle so it does not blow out the screen.
+  const glow=spriteGlow(4.55,.055,0xe4ebe7);
+  glow.position.z=-.28;glow.scale.x=.70;g.add(glow);
+
+  g.userData={
+    chassis,frame,idle,emergency,angle,glow,
+    setVisual(name){
+      idle.material.opacity=name==='idle'?1:0;
+      emergency.material.opacity=name==='emergency'?1:0;
+      angle.material.opacity=name==='angle'?1:0;
+    }
+  };
   return g;
 }
 
@@ -433,11 +370,12 @@ function buildTimeline(){
   beam.visible=false;beam.material.opacity=0;
 
   card.visible=true;phone.visible=false;
+  phone.userData.setVisual('idle');
   gsap.set(card.position,{x:-10.5,y:-1.8,z:-3.4});
   gsap.set(card.rotation,{x:THREE.MathUtils.degToRad(38),y:THREE.MathUtils.degToRad(-135),z:THREE.MathUtils.degToRad(-28)});
   gsap.set(card.scale,{x:.35,y:.35,z:.35});
   gsap.set(phone.position,{x:12.5,y:.8,z:-4.2});
-  gsap.set(phone.rotation,{x:THREE.MathUtils.degToRad(9),y:THREE.MathUtils.degToRad(168),z:THREE.MathUtils.degToRad(11)});
+  gsap.set(phone.rotation,{x:THREE.MathUtils.degToRad(3),y:THREE.MathUtils.degToRad(-10),z:THREE.MathUtils.degToRad(7)});
   gsap.set(phone.scale,{x:.52,y:.52,z:.52});
 
   tl=gsap.timeline({paused:!AUTOPLAY,repeat:LOOP?-1:0,repeatDelay:.45,defaults:{ease:'power3.inOut'}});
@@ -484,7 +422,7 @@ function buildTimeline(){
   // 4.35 — phone enters from RIGHT only at this moment; card approaches from LEFT.
   tl.set(phone,{visible:true},4.30)
     .to(phone.position,{x:L.phone.x,y:L.phone.y,z:L.phone.z,duration:1.00,ease:'expo.out'},4.36)
-    .to(phone.rotation,{x:THREE.MathUtils.degToRad(3),y:THREE.MathUtils.degToRad(174),z:THREE.MathUtils.degToRad(2),duration:1.00,ease:'expo.out'},4.36)
+    .to(phone.rotation,{x:THREE.MathUtils.degToRad(2),y:THREE.MathUtils.degToRad(-5),z:THREE.MathUtils.degToRad(1.5),duration:1.00,ease:'expo.out'},4.36)
     .to(phone.scale,{x:L.phone.s,y:L.phone.s,z:L.phone.s,duration:1.0,ease:'expo.out'},4.36)
     .to(card.position,{x:L.tapCard.x,y:L.tapCard.y,z:L.tapCard.z,duration:.84,ease:'power3.inOut'},4.88)
     .to(card.rotation,{x:THREE.MathUtils.degToRad(3),y:THREE.MathUtils.degToRad(166),z:THREE.MathUtils.degToRad(-7),duration:.84},4.88)
@@ -516,13 +454,15 @@ function buildTimeline(){
     .to(bloom,{strength:.18,duration:.42},5.52)
     .to(camera.position,{z:L.cameraZ-.28,duration:.08,ease:'power1.out'},5.42)
     .to(camera.position,{z:L.cameraZ,duration:.26,ease:'elastic.out(1,.6)'},5.50)
+    .to(phone.userData.idle.material,{opacity:0,duration:.20,ease:'power2.out'},5.50)
+    .to(phone.userData.emergency.material,{opacity:1,duration:.24,ease:'power2.out'},5.54)
     .to(tapCopy,{autoAlpha:0,duration:.24},5.86);
 
   // 6.0 — card exits OUTSIDE; phone flips to FRONT and screen becomes hero
   tl.to(card.position,{x:L.tapCard.x+(innerWidth/innerHeight<.82?2.0:2.8),y:L.tapCard.y-1.55,z:-.1,duration:.88,ease:'power3.inOut'},5.86)
     .to(card.rotation,{x:THREE.MathUtils.degToRad(8),y:THREE.MathUtils.degToRad(340),z:THREE.MathUtils.degToRad(10),duration:.88},5.86)
     .to(card.scale,{x:.31,y:.31,z:.31,duration:.88},5.86)
-    .to(phone.rotation,{x:0,y:0,z:0,duration:.92,ease:'expo.inOut'},5.90)
+    .to(phone.rotation,{x:0,y:THREE.MathUtils.degToRad(-1),z:0,duration:.92,ease:'expo.inOut'},5.90)
     .to(phone.position,{x:L.phone.x,y:L.phone.y,z:1.08,duration:.92,ease:'expo.inOut'},5.90)
     .to(phone.scale,{x:L.phone.s*1.16,y:L.phone.s*1.16,z:L.phone.s*1.16,duration:.92},5.90)
     .to(screenCopy,{autoAlpha:1,duration:.45,ease:'power2.out'},6.68);
@@ -557,8 +497,10 @@ function buildTimeline(){
       .set(c,{visible:false},9.94+i*.009);
   });
 
-  tl.to(phone.position,{x:L.finalPhone.x,y:L.finalPhone.y,z:L.finalPhone.z,duration:.92,ease:'expo.inOut'},9.72)
-    .to(phone.rotation,{x:THREE.MathUtils.degToRad(2),y:THREE.MathUtils.degToRad(-10),z:THREE.MathUtils.degToRad(2),duration:.92,ease:'expo.inOut'},9.72)
+  tl.to(phone.userData.emergency.material,{opacity:0,duration:.22,ease:'power2.out'},9.62)
+    .to(phone.userData.angle.material,{opacity:1,duration:.28,ease:'power2.out'},9.66)
+    .to(phone.position,{x:L.finalPhone.x,y:L.finalPhone.y,z:L.finalPhone.z,duration:.92,ease:'expo.inOut'},9.72)
+    .to(phone.rotation,{x:0,y:0,z:THREE.MathUtils.degToRad(-1),duration:.92,ease:'expo.inOut'},9.72)
     .to(phone.scale,{x:L.finalPhone.s,y:L.finalPhone.s,z:L.finalPhone.s,duration:.92,ease:'expo.inOut'},9.72)
     .to(card.position,{x:L.finalCard.x,y:L.finalCard.y,z:L.finalCard.z,duration:.92,ease:'expo.inOut'},9.72)
     .to(card.rotation,{x:THREE.MathUtils.degToRad(14),y:THREE.MathUtils.degToRad(350),z:THREE.MathUtils.degToRad(-8),duration:.92,ease:'expo.inOut'},9.72)
@@ -570,7 +512,7 @@ function buildTimeline(){
     .set(card.userData.sweepMat.uniforms.uX,{value:-1.1},10.80)
     .to(card.userData.sweepMat.uniforms.uX,{value:1.9,duration:.66,ease:'sine.inOut'},10.82)
     .to(card.userData.sweepMat.uniforms.uAlpha,{value:0,duration:.18},11.42)
-    .to(phone.rotation,{y:THREE.MathUtils.degToRad(-7),duration:1.0,ease:'sine.inOut'},11.28)
+    .to(phone.rotation,{y:THREE.MathUtils.degToRad(-1.5),z:THREE.MathUtils.degToRad(.5),duration:1.0,ease:'sine.inOut'},11.28)
     .to(card.rotation,{y:THREE.MathUtils.degToRad(354),z:THREE.MathUtils.degToRad(-5),duration:1.0,ease:'sine.inOut'},11.28)
     .to(finalCopy,{autoAlpha:0,duration:.30,ease:'power2.in'},12.45);
 
@@ -630,14 +572,17 @@ renderer.setAnimationLoop(()=>{
 
 (async function init(){
   try{
-    const [front,back,screen]=await Promise.all([
+    const [front,back,screen,idlePhone,emergencyPhone,anglePhone]=await Promise.all([
       loadTexture('./assets/card-front.png'),
       loadTexture('./assets/card-back.png'),
-      loadTexture('./assets/emergency-screen.png')
+      loadTexture('./assets/emergency-screen.png'),
+      loadTexture('./assets/iphone-front-idle.png'),
+      loadTexture('./assets/iphone-front-emergency.png'),
+      loadTexture('./assets/iphone-angle-emergency.png')
     ]);
 
     card=makeCard(front,back);products.add(card);
-    phone=makePhone(screen);products.add(phone);
+    phone=makePhone(screen,idlePhone,emergencyPhone,anglePhone);products.add(phone);
 
     for(let i=0;i<12;i++){
       const c=cloneProduct(card);c.visible=false;products.add(c);fan.push(c);

@@ -19,8 +19,8 @@ const AUTOPLAY = !/^(0|false|no)$/i.test(q.get('autoplay') || '1');
 if(!CONTROLS) document.querySelector('.controls').style.display='none';
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xf7f8f6);
-scene.fog = new THREE.FogExp2(0xf2f4f1, 0.012);
+scene.background = new THREE.Color(0x020303);
+scene.fog = new THREE.FogExp2(0x040505, 0.015);
 
 const camera = new THREE.PerspectiveCamera(34, innerWidth/innerHeight, .1, 100);
 camera.position.set(0,.05,11.8);
@@ -273,14 +273,14 @@ function makeEnergyBeam(){
 function makeWorld(){
   const g=new THREE.Group();
   const floor=new THREE.Mesh(new THREE.PlaneGeometry(34,24),new THREE.MeshPhysicalMaterial({
-    color:0xf2f4f1,metalness:.18,roughness:.78,clearcoat:.08
+    color:0x050606,metalness:.40,roughness:.48,clearcoat:.22
   }));
   floor.rotation.x=-Math.PI/2;floor.position.y=-3.08;floor.receiveShadow=true;g.add(floor);
 
   const planeMat=(color,opacity)=>new THREE.MeshBasicMaterial({color,transparent:true,opacity,side:THREE.DoubleSide,depthWrite:false,blending:THREE.AdditiveBlending});
-  const redSheet=new THREE.Mesh(new THREE.PlaneGeometry(7,17),planeMat(0xd9b7c1,.10));
+  const redSheet=new THREE.Mesh(new THREE.PlaneGeometry(7,17),planeMat(0x690d25,.14));
   redSheet.position.set(-6.2,1,-5.3);redSheet.rotation.z=-.40;g.add(redSheet);
-  const limeSheet=new THREE.Mesh(new THREE.PlaneGeometry(8,17),planeMat(0xc9dea2,.08));
+  const limeSheet=new THREE.Mesh(new THREE.PlaneGeometry(8,17),planeMat(0x5a8f00,.09));
   limeSheet.position.set(6.7,1.7,-5.8);limeSheet.rotation.z=.32;g.add(limeSheet);
 
   // dust
@@ -302,9 +302,9 @@ scene.add(new THREE.HemisphereLight(0xd5e8cf,0x11070b,.98));
 const key=new THREE.SpotLight(0xffffff,98,28,THREE.MathUtils.degToRad(31),.52,1.4);
 key.position.set(-4.2,6.9,7.6);key.castShadow=true;key.shadow.mapSize.set(1024,1024);scene.add(key);
 const rimLime=new THREE.PointLight(0x9fea23,40,17,1.8);rimLime.position.set(5.6,2.6,4.1);scene.add(rimLime);
-const rimRed=new THREE.PointLight(0xb61b41,12,16,1.7);rimRed.position.set(-5.8,.1,3.2);scene.add(rimRed);
-const coolRim=new THREE.PointLight(0xc5d7ff,11,18,1.6);coolRim.position.set(-1.2,3.9,5.2);scene.add(coolRim);
-const frontFill=new THREE.PointLight(0xffffff,10,16,2);frontFill.position.set(.2,.2,6.2);scene.add(frontFill);
+const rimRed=new THREE.PointLight(0xb61b41,24,16,1.7);rimRed.position.set(-5.8,.1,3.2);scene.add(rimRed);
+const coolRim=new THREE.PointLight(0xc5d7ff,14,18,1.6);coolRim.position.set(-1.2,3.9,5.2);scene.add(coolRim);
+const frontFill=new THREE.PointLight(0xffffff,13,16,2);frontFill.position.set(.2,.2,6.2);scene.add(frontFill);
 
 let card,phone,fan=[],rings=[],beam,tl;
 const intro=document.querySelector('.copy-intro');

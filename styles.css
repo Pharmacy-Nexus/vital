@@ -7,7 +7,7 @@
   --red:#9b1834;
 }
 *{box-sizing:border-box}
-html,body,#app{margin:0;width:100%;height:100%;overflow:hidden;background:#f7f8f6;color:#121517}
+html,body,#app{margin:0;width:100%;height:100%;overflow:hidden;background:#030404;color:#fff}
 body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 #app{position:relative;isolation:isolate}
 #webgl,#webgl canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
@@ -18,7 +18,7 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,
   background:
     radial-gradient(70% 80% at 80% 24%,rgba(150,223,18,.17),transparent 58%),
     radial-gradient(62% 85% at 14% 70%,rgba(130,17,48,.24),transparent 58%),
-    linear-gradient(135deg,#fbfcfa,#f3f5f2 54%,#f7faf4);
+    linear-gradient(135deg,#070808,#020303 54%,#071005);
   transition:opacity .6s ease;
 }
 .webgl-ready .fallback{opacity:0}
@@ -28,7 +28,7 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,
 .fallback-phone img{display:block;width:100%;border-radius:38px}
 
 .fx-overlay{position:absolute;inset:0;z-index:5;pointer-events:none;overflow:hidden}
-.vignette{position:absolute;inset:-5%;box-shadow:inset 0 0 16vmin 4vmin rgba(0,0,0,.06)}
+.vignette{position:absolute;inset:-5%;box-shadow:inset 0 0 16vmin 4vmin rgba(0,0,0,.40)}
 .grain{display:none}
 .scanline{display:none}
 .flash{position:absolute;inset:0;background:#dfff9e;opacity:0;mix-blend-mode:screen}
@@ -40,7 +40,7 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,
 }
 
 .copy-layer{position:absolute;inset:0;z-index:7;pointer-events:none}
-.copy{position:absolute;opacity:0;color:#101315}
+.copy{position:absolute;opacity:0}
 .copy-intro{left:7vw;top:50%;transform:translateY(-50%);max-width:700px}
 .kicker,.micro{display:block;color:var(--lime2);font-size:clamp(10px,.75vw,13px);font-weight:800;letter-spacing:.38em}
 .copy-intro h1{margin:15px 0 14px;font-size:clamp(48px,6.4vw,108px);line-height:.88;letter-spacing:-.065em;font-weight:780}
@@ -51,7 +51,7 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,
 .pulse-dot{width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 8px rgba(150,223,18,.10),0 0 24px rgba(150,223,18,.95)}
 
 .copy-screen{left:7vw;bottom:9vh}
-.copy-screen h2{margin:10px 0 0;font-size:clamp(30px,3.2vw,56px);line-height:.95;letter-spacing:-.05em;color:#111416}
+.copy-screen h2{margin:10px 0 0;font-size:clamp(30px,3.2vw,56px);line-height:.95;letter-spacing:-.05em}
 
 .copy-final{left:7vw;top:50%;transform:translateY(-50%);width:min(32vw,500px)}
 .copy-final img{display:block;width:100%}
@@ -60,15 +60,15 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,
 
 .ui-callout{
   position:absolute;min-width:210px;padding:13px 15px 12px;border:1px solid rgba(255,255,255,.14);
-  background:rgba(255,255,255,.72);backdrop-filter:blur(14px);border-radius:14px;opacity:0;
-  box-shadow:0 12px 28px rgba(0,0,0,.10)
+  background:rgba(5,6,6,.58);backdrop-filter:blur(14px);border-radius:14px;opacity:0;
+  box-shadow:0 15px 35px rgba(0,0,0,.32)
 }
-.ui-callout span{display:block;font-size:9px;letter-spacing:.24em;color:#69737d;margin-bottom:4px}
-.ui-callout b{font-size:18px;letter-spacing:-.02em;color:#111416}
+.ui-callout span{display:block;font-size:9px;letter-spacing:.24em;color:#adb4bc;margin-bottom:4px}
+.ui-callout b{font-size:18px;letter-spacing:-.02em;color:#eff2f3}
 .ui-callout.allergy{right:7vw;top:28vh;border-color:rgba(255,71,84,.28)}
-.ui-callout.allergy span{color:#d9505b}.ui-callout.allergy b{color:#111416}
-.ui-callout.blood{right:9vw;top:49vh}.ui-callout.blood b{color:#4d6d00}
-.ui-callout.condition{right:5vw;top:68vh}.ui-callout.condition b{font-size:14px;color:#4d6d00}
+.ui-callout.allergy span{color:#ff8c96}.ui-callout.allergy b{color:#fff}
+.ui-callout.blood{right:9vw;top:49vh}.ui-callout.blood b{color:#dfff95}
+.ui-callout.condition{right:5vw;top:68vh}.ui-callout.condition b{font-size:14px;color:#dfff95}
 
 .controls{position:absolute;right:18px;bottom:18px;z-index:9;display:flex;gap:8px}
 .controls button{width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.13);background:rgba(0,0,0,.36);color:#fff;backdrop-filter:blur(12px);cursor:pointer;opacity:.68;transition:.2s}
@@ -77,7 +77,7 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,
 .loader{position:absolute;z-index:15;inset:0;background:#020303;display:grid;place-content:center;justify-items:center;gap:16px;transition:opacity .55s ease,visibility .55s ease}
 .loader.hide{opacity:0;visibility:hidden}
 .loader-line{width:100px;height:2px;background:linear-gradient(90deg,transparent,var(--lime),transparent);animation:load 1s ease-in-out infinite}
-.loader span{font-size:9px;letter-spacing:.38em;color:#7b858e}
+.loader span{font-size:9px;letter-spacing:.38em;color:#8f969e}
 @keyframes load{0%,100%{transform:scaleX(.22);opacity:.32}50%{transform:scaleX(1);opacity:1}}
 
 @media(max-aspect-ratio: 4/5){

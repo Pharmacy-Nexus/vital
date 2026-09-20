@@ -142,133 +142,179 @@ function artFace(tex,w,h,z,rotY=0){
 
 function makeCard(frontTex,backTex){
   const g=new THREE.Group();
+
   const body=new THREE.Mesh(
-    roundedExtrude(4.38,2.58,.19,.105),
+    roundedExtrude(4.42,2.60,.18,.13),
     new THREE.MeshPhysicalMaterial({
-      color:0x111312,metalness:.77,roughness:.19,clearcoat:1,clearcoatRoughness:.10
+      color:0x17191a,metalness:.83,roughness:.17,clearcoat:1,clearcoatRoughness:.07,ior:1.55
     })
   );
   body.castShadow=true;body.receiveShadow=true;g.add(body);
 
-  const front=artFace(frontTex,4.32,2.54,.108,0);
-  const back=artFace(backTex,4.32,2.54,-.108,Math.PI);
+  const shell=new THREE.Mesh(
+    roundedExtrude(4.46,2.64,.185,.14),
+    new THREE.MeshPhysicalMaterial({
+      color:0xd1d5d2,metalness:1,roughness:.28,transparent:true,opacity:.08,clearcoat:1,clearcoatRoughness:.05
+    })
+  );
+  shell.scale.z=.98;shell.position.z=.001;g.add(shell);
+
+  const front=artFace(frontTex,4.34,2.56,.103,0);
+  const back=artFace(backTex,4.34,2.56,-.103,Math.PI);
   g.add(front,back);
 
   const edge=new THREE.LineSegments(
     new THREE.EdgesGeometry(body.geometry,28),
-    new THREE.LineBasicMaterial({color:0xb8ff43,transparent:true,opacity:.26,blending:THREE.AdditiveBlending})
+    new THREE.LineBasicMaterial({color:0xf0f4f1,transparent:true,opacity:.18})
   );
-  g.add(edge);
+  edge.scale.set(.998,.998,.998);g.add(edge);
 
-  const glow=spriteGlow(6.0,.11,0xaaff33);
-  glow.position.z=-.18;glow.scale.y=.55;g.add(glow);
+  const glow=spriteGlow(4.85,.075,0xaaff33);
+  glow.position.set(0,0,-.02);
+  glow.scale.x=.78;glow.material.opacity=.0;
+  g.add(glow);
 
-  // travelling reflection sweep above the front face
+  const gloss=new THREE.Mesh(
+    roundedPlane(4.28,2.52,.16),
+    new THREE.MeshPhysicalMaterial({
+      color:0xffffff,transparent:true,opacity:.028,roughness:.03,metalness:0,clearcoat:1,clearcoatRoughness:.02
+    })
+  );
+  gloss.position.z=.109;gloss.renderOrder=7;g.add(gloss);
+
   const sweepMat=new THREE.ShaderMaterial({
     transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,
     uniforms:{uX:{value:-1.2},uAlpha:{value:0}},
     vertexShader:`varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
     fragmentShader:`varying vec2 vUv;uniform float uX;uniform float uAlpha;void main(){
-      float band=1.0-smoothstep(.0,.16,abs((vUv.x+vUv.y*.32)-uX));
-      gl_FragColor=vec4(vec3(.72,1.0,.45)*band,uAlpha*band*.85);
+      float band=1.0-smoothstep(.0,.15,abs((vUv.x+vUv.y*.34)-uX));
+      gl_FragColor=vec4(vec3(.78,1.0,.55)*band,uAlpha*band*.72);
     }`
   });
-  const sweep=new THREE.Mesh(roundedPlane(4.30,2.52,.16),sweepMat);
+  const sweep=new THREE.Mesh(roundedPlane(4.30,2.54,.16),sweepMat);
   sweep.position.z=.116;sweep.renderOrder=8;g.add(sweep);
 
-  g.userData={body,front,back,edge,glow,sweep,sweepMat};
+  g.userData={body,front,back,edge,glow,shell,gloss,sweep,sweepMat};
   return g;
 }
 
 function makePhone(screenTex){
   const g=new THREE.Group();
   const body=new THREE.Mesh(
-    roundedExtrude(2.50,5.18,.30,.24),
+    roundedExtrude(2.48,5.22,.31,.28),
     new THREE.MeshPhysicalMaterial({
-      color:0x171918,metalness:.96,roughness:.13,clearcoat:1,clearcoatRoughness:.07
+      color:0x1b1d1d,metalness:.98,roughness:.11,clearcoat:1,clearcoatRoughness:.05,ior:1.55
     })
   );
   body.castShadow=true;g.add(body);
 
   // front display
-  const screenGeo=roundedPlane(2.27,4.88,.25);
+  const screenGeo=roundedPlane(2.22,4.90,.27);
   const screenMat=new THREE.MeshBasicMaterial({map:screenTex,toneMapped:false,color:0xffffff});
   const screen=new THREE.Mesh(screenGeo,screenMat);
   screen.position.z=.178;screen.renderOrder=5;g.add(screen);
 
+  // front glass
   const glass=new THREE.Mesh(screenGeo,new THREE.MeshPhysicalMaterial({
-    color:0xffffff,transparent:true,opacity:.02,roughness:.02,clearcoat:1,clearcoatRoughness:.02
+    color:0xffffff,transparent:true,opacity:.032,roughness:.015,clearcoat:1,clearcoatRoughness:.01
   }));
-  glass.position.z=.184;glass.renderOrder=6;g.add(glass);
+  glass.position.z=.188;g.add(glass);
 
-  // back panel
+  // subtle screen reflection
+  const reflection=new THREE.Mesh(
+    roundedPlane(1.92,4.20,.22),
+    new THREE.MeshPhysicalMaterial({
+      color:0xcfe4ff,transparent:true,opacity:.06,roughness:.02,clearcoat:1,clearcoatRoughness:.02
+    })
+  );
+  reflection.rotation.z=-.34;
+  reflection.position.set(.12,.10,.189);
+  g.add(reflection);
+
+  // dynamic island + tiny camera dot
+  const island=new THREE.Mesh(
+    new THREE.CapsuleGeometry(.235, .42, 8, 18),
+    new THREE.MeshBasicMaterial({color:0x050607})
+  );
+  island.rotation.z=Math.PI/2;island.position.set(0,2.00,.182);g.add(island);
+
+  const camDot=new THREE.Mesh(
+    new THREE.CircleGeometry(.028,24),
+    new THREE.MeshBasicMaterial({color:0x18253a,toneMapped:false})
+  );
+  camDot.position.set(.31,2.00,.183);g.add(camDot);
+
+  // back glass panel
   const backPanel=new THREE.Mesh(
-    roundedPlane(2.27,4.88,.25),
-    new THREE.MeshPhysicalMaterial({color:0x111412,metalness:.68,roughness:.32,clearcoat:.7,side:THREE.DoubleSide})
+    roundedPlane(2.26,4.96,.27),
+    new THREE.MeshPhysicalMaterial({color:0x111412,metalness:.70,roughness:.28,clearcoat:.9,side:THREE.DoubleSide})
   );
   backPanel.position.z=-.178;backPanel.rotation.y=Math.PI;g.add(backPanel);
 
+  // MagSafe / NFC hint
+  const nfc=new THREE.Mesh(
+    new THREE.TorusGeometry(.62,.018,10,80),
+    new THREE.MeshBasicMaterial({color:0x95ef24,transparent:true,opacity:.0,toneMapped:false})
+  );
+  nfc.position.z=-.182;nfc.rotation.y=Math.PI;g.add(nfc);
+
   // camera bump
   const bump=new THREE.Mesh(
-    roundedExtrude(.88,.88,.18,.082),
-    new THREE.MeshPhysicalMaterial({color:0x202321,metalness:.86,roughness:.16,clearcoat:1})
+    roundedExtrude(.96,.96,.19,.09),
+    new THREE.MeshPhysicalMaterial({color:0x252826,metalness:.88,roughness:.15,clearcoat:1})
   );
-  bump.position.set(-.66,1.65,-.228);bump.rotation.y=Math.PI;g.add(bump);
+  bump.position.set(-.65,1.64,-.228);bump.rotation.y=Math.PI;g.add(bump);
 
   const lensMat=new THREE.MeshPhysicalMaterial({
-    color:0x010202,metalness:.62,roughness:.035,clearcoat:1,clearcoatRoughness:.02
+    color:0x010202,metalness:.65,roughness:.03,clearcoat:1,clearcoatRoughness:.01
   });
   [[-.86,1.86],[-.49,1.86],[-.68,1.49]].forEach(([x,y])=>{
-    const l=new THREE.Mesh(new THREE.CylinderGeometry(.118,.118,.052,40),lensMat);
-    l.rotation.x=Math.PI/2;l.position.set(x,y,-.282);g.add(l);
+    const l=new THREE.Mesh(new THREE.CylinderGeometry(.122,.122,.056,44),lensMat);
+    l.rotation.x=Math.PI/2;l.position.set(x,y,-.285);g.add(l);
+
     const ring=new THREE.Mesh(
-      new THREE.TorusGeometry(.128,.014,8,32),
-      new THREE.MeshBasicMaterial({color:0x737a74})
+      new THREE.TorusGeometry(.132,.015,10,42),
+      new THREE.MeshBasicMaterial({color:0x848a84})
     );
-    ring.position.set(x,y,-.309);ring.rotation.x=Math.PI/2;g.add(ring);
+    ring.position.set(x,y,-.312);ring.rotation.x=Math.PI/2;g.add(ring);
+
+    const gloss=new THREE.Mesh(
+      new THREE.CircleGeometry(.082,28),
+      new THREE.MeshBasicMaterial({color:0x182029,transparent:true,opacity:.28,toneMapped:false})
+    );
+    gloss.position.set(x,y,-.314);gloss.rotation.y=Math.PI;g.add(gloss);
   });
 
   const flashDot=new THREE.Mesh(
-    new THREE.CircleGeometry(.055,28),
-    new THREE.MeshBasicMaterial({color:0xf4f1d8,toneMapped:false})
+    new THREE.CircleGeometry(.058,28),
+    new THREE.MeshBasicMaterial({color:0xf5f0da,toneMapped:false})
   );
-  flashDot.position.set(-.43,1.49,-.311);flashDot.rotation.y=Math.PI;g.add(flashDot);
+  flashDot.position.set(-.43,1.49,-.313);flashDot.rotation.y=Math.PI;g.add(flashDot);
 
   const lidar=new THREE.Mesh(
-    new THREE.CircleGeometry(.038,28),
-    new THREE.MeshBasicMaterial({color:0x181a19,toneMapped:false})
+    new THREE.CircleGeometry(.040,28),
+    new THREE.MeshBasicMaterial({color:0x1b1d1d,toneMapped:false})
   );
-  lidar.position.set(-.42,1.63,-.312);lidar.rotation.y=Math.PI;g.add(lidar);
+  lidar.position.set(-.42,1.63,-.314);lidar.rotation.y=Math.PI;g.add(lidar);
 
-  // NFC mark on the back
-  const nfc=new THREE.Group();
-  for(let i=0;i<3;i++){
-    const arc=new THREE.Mesh(
-      new THREE.TorusGeometry(.13+i*.105,.018,8,48,Math.PI*1.06),
-      new THREE.MeshBasicMaterial({color:0x9fe91f,toneMapped:false})
-    );
-    arc.rotation.z=-Math.PI*.53;nfc.add(arc);
-  }
-  nfc.position.set(.53,.88,-.207);nfc.rotation.y=Math.PI;g.add(nfc);
-
-  // Dynamic island
-  const island=new THREE.Mesh(new THREE.CapsuleGeometry(.10,.40,8,14),new THREE.MeshBasicMaterial({color:0x010101}));
-  island.rotation.z=Math.PI/2;island.scale.set(1,1,.16);island.position.set(0,2.16,.205);g.add(island);
-
-  // edge buttons
-  const bm=new THREE.MeshStandardMaterial({color:0x2c2f2d,metalness:.85,roughness:.2});
-  const b1=new THREE.Mesh(new THREE.BoxGeometry(.05,.60,.10),bm);b1.position.set(-1.29,.58,.03);g.add(b1);
-  const b2=b1.clone();b2.scale.y=.52;b2.position.y=1.27;g.add(b2);
-  const b3=b1.clone();b3.scale.y=.78;b3.position.set(1.29,.78,.03);g.add(b3);
+  // side buttons
+  const bm=new THREE.MeshStandardMaterial({color:0x626864,metalness:.95,roughness:.22});
+  const actionBtn=new THREE.Mesh(new THREE.BoxGeometry(.05,.30,.10),bm);
+  actionBtn.position.set(-1.28,1.55,.03);g.add(actionBtn);
+  const vol1=new THREE.Mesh(new THREE.BoxGeometry(.05,.54,.10),bm);vol1.position.set(-1.28,.84,.03);g.add(vol1);
+  const vol2=vol1.clone();vol2.scale.y=.85;vol2.position.y=.18;g.add(vol2);
+  const power=new THREE.Mesh(new THREE.BoxGeometry(.05,.82,.10),bm);power.position.set(1.28,.78,.03);g.add(power);
 
   const frame=new THREE.LineSegments(
     new THREE.EdgesGeometry(body.geometry,26),
-    new THREE.LineBasicMaterial({color:0xc7ccc8,transparent:true,opacity:.14})
+    new THREE.LineBasicMaterial({color:0xe0e4e1,transparent:true,opacity:.18})
   );
   g.add(frame);
 
-  const glow=spriteGlow(5.1,.09,0xaaff33);glow.position.z=-.38;glow.scale.x=.70;g.add(glow);
-  g.userData={body,screen,glass,backPanel,nfc,glow,frame};
+  const glow=spriteGlow(5.1,.08,0xaaff33);
+  glow.position.z=-.38;glow.scale.x=.70;g.add(glow);
+
+  g.userData={body,screen,glass,reflection,backPanel,nfc,glow,frame};
   return g;
 }
 
@@ -315,12 +361,13 @@ function makeWorld(){
 const world=makeWorld();scene.add(world);
 const products=new THREE.Group();scene.add(products);
 
-scene.add(new THREE.HemisphereLight(0xcfe7c0,0x13070b,1.05));
-const key=new THREE.SpotLight(0xffffff,105,28,THREE.MathUtils.degToRad(31),.52,1.4);
-key.position.set(-4.5,6.7,7.5);key.castShadow=true;key.shadow.mapSize.set(1024,1024);scene.add(key);
-const rimLime=new THREE.PointLight(0x9fea23,48,17,1.8);rimLime.position.set(5.4,2.5,4);scene.add(rimLime);
-const rimRed=new THREE.PointLight(0xb61b41,35,16,1.7);rimRed.position.set(-5.7,-.2,3.0);scene.add(rimRed);
-const frontFill=new THREE.PointLight(0xffffff,18,16,2);frontFill.position.set(0,0,6);scene.add(frontFill);
+scene.add(new THREE.HemisphereLight(0xd5e8cf,0x11070b,.98));
+const key=new THREE.SpotLight(0xffffff,98,28,THREE.MathUtils.degToRad(31),.52,1.4);
+key.position.set(-4.2,6.9,7.6);key.castShadow=true;key.shadow.mapSize.set(1024,1024);scene.add(key);
+const rimLime=new THREE.PointLight(0x9fea23,40,17,1.8);rimLime.position.set(5.6,2.6,4.1);scene.add(rimLime);
+const rimRed=new THREE.PointLight(0xb61b41,24,16,1.7);rimRed.position.set(-5.8,.1,3.2);scene.add(rimRed);
+const coolRim=new THREE.PointLight(0xc5d7ff,14,18,1.6);coolRim.position.set(-1.2,3.9,5.2);scene.add(coolRim);
+const frontFill=new THREE.PointLight(0xffffff,13,16,2);frontFill.position.set(.2,.2,6.2);scene.add(frontFill);
 
 let card,phone,fan=[],rings=[],beam,tl;
 const intro=document.querySelector('.copy-intro');

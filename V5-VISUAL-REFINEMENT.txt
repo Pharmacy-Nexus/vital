@@ -1,0 +1,28 @@
+V5 – VISUAL REFINEMENT ONLY
+=============================
+This version keeps the same core scene and only improves the visual look.
+
+What changed:
+1) Phone refinement:
+   - more iPhone-like proportions and premium titanium/glass materials
+   - cleaner dynamic island + tiny camera detail
+   - upgraded camera bump, lens rings, flash, LiDAR feel
+   - more accurate side buttons
+   - subtle screen reflection for a premium product-shot feel
+
+2) Card refinement:
+   - slightly improved proportions and rounded corners
+   - cleaner metallic shell / edge highlight
+   - glossier premium finish
+   - preserved the exact artwork / branding / text / QR / NFC symbol
+
+3) Lighting refinement:
+   - slightly cleaner product lighting
+   - cooler rim light to help the phone edges read better
+   - same mood, no redesign
+
+What did NOT change:
+- no redesign of the concept
+- no change to the core animation idea
+- no change to the brand identity or card artwork
+- no change to the overall sequence structure
